@@ -1,0 +1,56 @@
+clear
+clc
+%1
+Is = 0.01e-12;
+Ib= 0.1e-12;
+Vb = 1.3;
+gp = 0.1;
+
+V = linspace(-1.95,0.7,200);
+Vx = V + Vb;
+
+
+I = Is.*((exp(1.2/0.25).*V)-1);+ gp.*V + Ib.*(exp((-1.2/0.025).*Vx));
+
+randv = rand(1,200).*0.4+0.8;
+
+I2 = I.*randv;
+figure(1)
+plot(I2)
+figure(2)
+semilogy(I2)
+
+%2
+p4 = polyfit(V,I,4);
+p42 = polyfit(V,I2,4);
+p8 = polyfit(V,I,8);
+p82 = polyfit(V,I2,8);
+figure(3)
+subplot(2,1,1);
+plot(p4)
+title('Polynomial fitting 4th Order (non randomized)')
+subplot(2,1,2);
+plot(p42)
+title('Polynomial fitting 4th Order (randomized)')
+figure(4)
+subplot(2,1,1);
+plot(p8)
+title('Polynomial fitting 8th Order (non randomized)')
+subplot(2,1,2);
+plot(p82)
+title('Polynomial fitting 8th Order (randomized)')
+
+%3
+f0 = fittype('A.*(exp(-1.2*x/25e-3)-1) + 0.1.*x - C*(exp(1.2*(-(x+1.3))/25e-3)-1)');
+ff0 = fit(V',I2',f0);
+If0 = ff(V');
+
+f2 =  fittype('A.*(exp(-1.2*x/25e-3)-1) + B.*x - C*(exp(1.2*(-(x+1.3))/25e-3)-1)');
+ff2 = fit(V',I2',f0);
+If2 = ff(V');
+
+f3 =  fittype('A.*(exp(-1.2*x/25e-3)-1) + B.*x - C*(exp(1.2*(-(x+D))/25e-3)-1)');
+ff3 = fit(V',I2',f0);
+If3 = ff(V');
+
+plot(Id0)
